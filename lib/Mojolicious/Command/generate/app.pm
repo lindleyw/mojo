@@ -159,7 +159,7 @@ L<Mojolicious>, L<Mojolicious::Guides>, L<http://mojolicious.org>.
 __DATA__
 
 @@ mojo
-% my ($class, $lib) = @_;
+% my ($class, $lib, $mojo_preamble) = @_;
 #!/usr/bin/env perl
 
 use strict;
