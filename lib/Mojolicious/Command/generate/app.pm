@@ -7,13 +7,33 @@ use Mojo::File;
 has description => 'Generate Mojolicious application directory structure';
 has usage => sub { shift->extract_usage };
 
-has locations => sub { { script => 'script',
-                         class  => 'lib',
-                         test   => 't',
-                         static => 'public',
-                         controller => 'Example',
-                         action => 'welcome',
-                     } };
+has locations => sub {
+    if (0) {
+        # Mojo standard
+        { script => 'script',
+          class  => 'lib',
+          test   => 't',
+          static => 'public',
+          controller => 'Example',
+          action => 'welcome',
+      }
+    } else {
+        { script => 'bin',    # vs. 'script' for standard Mojo app
+          class => 'app',
+          test   => 't',
+          static => 'public',
+          controller => 'App',
+          action => 'index',
+      }
+    }
+};
+# has locations => sub { { script => 'script',
+#                          class  => 'lib',
+#                          test   => 't',
+#                          static => 'public',
+#                          controller => 'Example',
+#                          action => 'welcome',
+#                      } };
 
 sub run {
   my ($self, $class) = @_;
@@ -147,7 +167,12 @@ use warnings;
 
 use FindBin;
 BEGIN { unshift @INC, "$FindBin::Bin/../<%= $lib %>" }
+
 use Mojolicious::Commands;
+
+use Mojo::File;
+# Assume this script lies one directory below the application's home dir
+$ENV{MOJO_HOME} =  Mojo::File->new($FindBin::Bin)->realpath->dirname;
 
 # Start command line interface for application
 Mojolicious::Commands->start_app('<%= $class %>');
